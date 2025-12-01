@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -36,7 +38,7 @@ public class LatestTeleOp extends OpMode {
         //initialize Config
         config = new Config();
         rbgIndicator = hardwareMap.get(Servo.class, config.RBGName);
-        pods.setPosition((double )blackboard.get(config.Xkey), (double )blackboard.get(config.Ykey) ,(double)blackboard.get(config.HeadingKey));
+        pods.setPosition((double)blackboard.get(config.Xkey), (double)blackboard.get(config.Ykey) ,(double)blackboard.get(config.HeadingKey));
         //initialize the robotSubsystem class
         robotSubsystem = new ShooterSubsystem(hardwareMap);
         aimbots = new Aimbots((int)blackboard.get(config.AllianceKey), pods, hardwareMap);
@@ -143,6 +145,8 @@ public class LatestTeleOp extends OpMode {
         // Control Intake wheel
 
         // write telemetry to Drive Hub
+        telemetry.addData("x", pods.getX());
+        telemetry.addData("y", pods.getY());
         telemetry.addData("h", pods.getHeading());
         telemetry.addData("LL", aimbots.LLstatusIsValid());
         telemetry.addData("rpm", robotSubsystem.getRpm());

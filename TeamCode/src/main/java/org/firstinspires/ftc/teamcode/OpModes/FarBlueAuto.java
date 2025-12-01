@@ -32,6 +32,8 @@ public class FarBlueAuto extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     int tagID;
     int flywheelSpeed;
+    double driveSpeed;
+    double headingSpeed;
     @Override
     public void runOpMode() throws InterruptedException {
         drivetrain = new MecanumDrivetrain(1, hardwareMap);
@@ -55,7 +57,9 @@ public class FarBlueAuto extends LinearOpMode {
         flywheelSpeed = 2650;
         robotSubsystem.setServoPosition(0.5);
         rgb.setPosition(config.Green);
+        driveSpeed = 0.4;
         waitForStart();
+        headingSpeed = 0.5;
         runtime.reset();
         timer.reset();
         while(opModeIsActive()){
@@ -251,7 +255,13 @@ public class FarBlueAuto extends LinearOpMode {
             telemetry.addData("I see apriltag: ", aimbots.LLstatusIsValid());
             telemetry.update();
         }
+        if(isStopRequested()){
+            blackboard.put(config.Xkey, pods.getX());
+            blackboard.put(config.Ykey, pods.getY());
+            blackboard.put(config.HeadingKey, pods.getHeading());
+        }
     }
+
     public void resetArtifacts(){
         robotSubsystem.setFlywheelVelocity(-300);
         robotSubsystem.spinBelt(-0.2);
