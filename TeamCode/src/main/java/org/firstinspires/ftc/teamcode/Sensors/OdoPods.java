@@ -58,7 +58,7 @@ public class OdoPods {
 
         //Initialize pinpoint
         pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
-        pinpoint.setOffsets(0, -160);
+        pinpoint.setOffsets(0, -165);
         pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
         pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
         pinpoint.recalibrateIMU();
@@ -163,7 +163,6 @@ public class OdoPods {
         // Pass corrections to Drivetrain for execution
         drivetrain.drive(driveCorrection, strafeCorrection, headingCorrection);
     }
-
     /**
      * Holds the robot at a specific (x, y, heading) position using PDFL corrections.
      *

@@ -45,7 +45,8 @@ public class LatestTeleOp extends OpMode {
         vel = 3500;
         flywheelActive = false;
         aimbots.startLL();
-        aimbots.switchPipeline(0);}
+        aimbots.switchPipeline(0);
+    }
 
     @Override
     public void loop() {
@@ -71,7 +72,7 @@ public class LatestTeleOp extends OpMode {
             robotSubsystem.spinBelt(-1);
         }
         else{
-            robotSubsystem.spinIntake(0);
+            robotSubsystem.spinIntake(0.6);
         }
         // Set launch velocity light
         if((robotSubsystem.getRpm()) < vel+50 && robotSubsystem.getRpm() > vel-50){
@@ -93,8 +94,8 @@ public class LatestTeleOp extends OpMode {
         }
         else{
             robotSubsystem.spinBelt(0);
-            robotSubsystem.setServoPosition(0.3);
-            robotSubsystem.spinIntake(0);
+            robotSubsystem.setServoPosition(0.45);
+            robotSubsystem.spinIntake(0.6);
         }
         //flywheel controls
         if(currentGamepad1.dpad_down && !previousGamepad1.dpad_down){
@@ -105,7 +106,8 @@ public class LatestTeleOp extends OpMode {
         }
 
         //auto aim
-        if(currentGamepad1.a && !previousGamepad1.a) {
+        if(gamepad1.a) {
+            aimbots.update();
             if(aimbots.LLstatusIsValid()){
                 targetH = pods.getHeading()-aimbots.getHeadingErrorLL();
                 //pods.holdHeading(targetH,1);
@@ -115,12 +117,10 @@ public class LatestTeleOp extends OpMode {
                 //pods.holdHeading(targetH, 1);
             }
             vel = robotSubsystem.flywheelGetRpmFromTable((int)aimbots.calculateSideLengthUsingPods());
-        }
-        if(gamepad1.a){
             pods.holdHeading(targetH,1);
         }
         else if(!gamepad1.a){
-            drivetrain.drive(gamepad1.left_stick_y*-1, 1*gamepad1.left_stick_x, gamepad1.right_stick_x*1);
+            drivetrain.drive(gamepad1.left_stick_y*1, -1*gamepad1.left_stick_x, gamepad1.right_stick_x*0.8);
         }
 
         if(currentGamepad1.b && !previousGamepad1.b){
@@ -131,11 +131,19 @@ public class LatestTeleOp extends OpMode {
                 flywheelActive = true;
             }
         }
+        if(currentGamepad1.x && !previousGamepad1.x){
+            aimbots.stopLL();
+            aimbots.startLL();
+        }
+        if(currentGamepad1.y && !previousGamepad1.y){
+            vel = 3600;
+        }
 
 
         // Control Intake wheel
 
         // write telemetry to Drive Hub
+        telemetry.addData("h", pods.getHeading());
         telemetry.addData("LL", aimbots.LLstatusIsValid());
         telemetry.addData("rpm", robotSubsystem.getRpm());
         telemetry.addData("distance", aimbots.calculateSideLengthUsingPods());

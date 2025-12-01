@@ -253,3 +253,4 @@ public class FarRedAuto extends LinearOpMode {
         robotSubsystem.spinBelt(0);
     }
 }
+

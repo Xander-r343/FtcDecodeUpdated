@@ -40,6 +40,7 @@ public class Aimbots {
         }
         givenAlliance = alliance;
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        limelight.resetDeviceConfigurationForOpMode();
         limelight.start();
     }
 
@@ -56,10 +57,6 @@ public class Aimbots {
         BvertY = CVertY;
         BvertX = pods.getX();
         result = limelight.getLatestResult();
-        Pose3D botpose = result.getBotpose();
-        double captureLatency = result.getCaptureLatency();
-        double targetingLatency = result.getTargetingLatency();
-        double parseLatency = result.getParseLatency();
         pods.update();
     }
 
@@ -86,9 +83,9 @@ public class Aimbots {
     }
 
     public double getDistanceUsingLL() {
-        double targetHeight = 10.75;
-        double LLHeight = 2.5;
-        return (targetHeight - LLHeight) / Math.tan(Math.toRadians(result.getTy()));
+        double targetHeight = 29.75;
+        double LLHeight = 6.75;
+        return (targetHeight - LLHeight) / Math.tan(Math.toRadians(20-result.getTy()));
     }
 
     public void stopLL() {
@@ -110,7 +107,6 @@ public class Aimbots {
     public void correctWithHeadingError(double speed) {
         pods.holdHeading(pods.getHeading() - getHeadingErrorLL(), speed);
     }
-
     public boolean LLstatusIsValid() {
         return result.isValid();
     }
