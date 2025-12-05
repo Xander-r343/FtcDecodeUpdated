@@ -67,10 +67,12 @@ public class Config {
 
     //turret
     //Todo fill out
-    public final String turretRotationName = "surretRotater";
+    public final String turretRotationName = "turretRotater";
     public final String leftHoodServo = "leftHood";
     public final String rightHoodServo = "rightHood";
-
+    public final double hoodMinimumLaunchAngle = 30;
+    public final double hoodMaximumLaunchAngle = 70;
+    public final int servoRange = 120;//degrees
 
     public final int teethOnTurret = 180;
     public final int teethOnMotorPulley = 15;
@@ -78,6 +80,4 @@ public class Config {
     //flywheel names
     public final String newRobotLeftFlywheel = "leftFlywheel";
     public final String newRobotRightFlywheel = "rightFlywheel";
-
-
 }
