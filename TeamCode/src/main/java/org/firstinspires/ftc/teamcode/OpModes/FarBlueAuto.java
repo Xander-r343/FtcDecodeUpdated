@@ -48,10 +48,7 @@ public class FarBlueAuto extends LinearOpMode {
         config = new Config();
         robotSubsystem = new ShooterSubsystem(hardwareMap);
         //intialize blackboard objects
-        Xpos = blackboard.getOrDefault(config.Xkey, 0);
-        Ypos = blackboard.getOrDefault(config.Ykey, 0);
-        Headingpos = blackboard.getOrDefault(config.HeadingKey, 0);
-        Alliance = blackboard.getOrDefault(config.AllianceKey, 0);//isRedValue
+
         blackboard.put(config.AllianceKey, config.BlueAlliance);
         AutoState = 0;
         //initialize odopods by using the config class
@@ -199,10 +196,10 @@ public class FarBlueAuto extends LinearOpMode {
                     //pickup ball
                     timer.reset();
                     timer.startTime();
-                    robotSubsystem.spinIntake(0.7);
+                    robotSubsystem.spinIntake(1);
                     robotSubsystem.spinBelt(1);
                     while(timer.seconds() < 2){
-                        pods.holdPosition(14, 60.5, -90, 0.4);
+                        pods.holdPosition(8, 60, -90, 0.3);
                         pods.update();
                     }
                     AutoState = 7;
@@ -238,7 +235,7 @@ public class FarBlueAuto extends LinearOpMode {
                         robotSubsystem.spinBelt(0.4);
                     }
                     robotSubsystem.setServoPosition(0);
-                    pods.holdPosition(15, 80, -90, 1);
+                    pods.holdPosition(15, 90, -90, 1);
                     pods.update();
 
                 }

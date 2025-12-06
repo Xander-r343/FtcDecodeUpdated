@@ -84,10 +84,10 @@ public class LatestTeleOp extends OpMode {
         if(currentGamepad1.right_bumper && !previousGamepad1.right_bumper){
             robotSubsystem.setServoPosition(1);
             robotSubsystem.setTargetPosition(500);
-            robotSubsystem.spinBelt(1);
+            robotSubsystem.updateBeltPosition();
         }
         else if(gamepad1.left_trigger > 0) {
-            robotSubsystem.setTargetPosition(80);
+            robotSubsystem.spinBelt(gamepad1.left_trigger);
             robotSubsystem.spinIntake(gamepad1.left_trigger);
             robotSubsystem.setServoPosition(1);
         }

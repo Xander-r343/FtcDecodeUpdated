@@ -62,6 +62,7 @@ public class FarRedAuto extends LinearOpMode {
         headingSpeed = 0.5;
         runtime.reset();
         timer.reset();
+        blackboard.put(config.AllianceKey,config.RedAlliance);
         while (opModeIsActive()) {
             aimbots.update();
             switch (AutoState) {
@@ -194,10 +195,10 @@ public class FarRedAuto extends LinearOpMode {
                     //pickup ball
                     timer.reset();
                     timer.startTime();
-                    robotSubsystem.spinIntake(0.7);
+                    robotSubsystem.spinIntake(1);
                     robotSubsystem.spinBelt(1);
-                    while(timer.seconds() < 2){
-                        pods.holdPosition(130, 60.5, 90, 0.4);
+                    while(timer.seconds() < 2.2){
+                        pods.holdPosition(138, 60, 90, 0.3);
                         pods.update();
                     }
                     AutoState = 7;
@@ -234,7 +235,7 @@ public class FarRedAuto extends LinearOpMode {
                     }
                     robotSubsystem.setServoPosition(0);
 
-                    pods.holdPosition(129, 80, 90, 1);
+                    pods.holdPosition(129, 90, 90, 1);
                     pods.update();
 
                 }

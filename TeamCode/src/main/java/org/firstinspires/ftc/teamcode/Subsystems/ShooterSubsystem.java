@@ -76,6 +76,7 @@ public class ShooterSubsystem {
      * @param power is the power from -1 to 1
      */
     public void spinBelt(double power) {
+        starboardBelt.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         starboardBelt.setPower(power);
         portBelt.setPower(power);
     }
