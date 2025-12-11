@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import androidx.annotation.NonNull;
+
+import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -8,6 +11,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Configs.Config;
+import org.firstinspires.ftc.teamcode.Sensors.OdoPods;
 
 public class Turret {
     private Config config;
@@ -17,7 +21,9 @@ public class Turret {
     private DcMotorEx leftFlywheelMotor;
     private DcMotorEx rightFlywheelMotor;
     private Limelight3A limelight;
-    public Turret(HardwareMap hardwareMap, int alliance){
+    private LLResult result;
+    Aimbots aimbots;
+    public Turret(@NonNull HardwareMap hardwareMap, int alliance, Aimbots givenAimbots){
         //initalize turret servos and motor
         config = new Config();
         leftHoodServo = hardwareMap.get(Servo.class, config.leftHoodServo);
@@ -26,6 +32,7 @@ public class Turret {
         turretRotater = hardwareMap.get(DcMotorEx.class, config.turretRotationName);
         turretRotater.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         turretRotater.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        turretRotater.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //initalize left motor
         leftFlywheelMotor = hardwareMap.get(DcMotorEx.class, config.newRobotLeftFlywheel);
         leftFlywheelMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -46,15 +53,47 @@ public class Turret {
         else if(alliance == config.BlueAlliance){
             limelight.pipelineSwitch(1);
         }
-
-    }
-    public double setTurretPositionDegrees(double degrees){
-        //TODO get ticks per rotation of turret
-        //make it so turret an never exceed 180 degrees or go below -180 degrees
-        //make it so 0 degrees is straightforward as to avoid confusion with the current aiming system
-        return 0.0;
+        //aiming:
+        aimbots = givenAimbots;
     }
 
+    /**
+     * sets the turret to be a specific angle
+     * @param degrees the wanted angle from the perspective of the field
+     * @param power the power to move turret at
+     */
+    public void setTurretPositionDegrees(double degrees, double power){
+        int targetPose;
+        if(degrees <=180 && degrees >= -180) {
+            targetPose = (int)degrees;
+        }
+        else if(degrees > 180){
+            targetPose = 180;
+        }
+        else{
+            targetPose = -180;
+        }
+        turretRotater.setTargetPosition((int)(aimbots.pods.getHeading()) - (int)(targetPose*config.ticksPerDegree));
+        turretRotater.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        turretRotater.setPower(power);
+    }
+    public double getTurretPositionDegrees(){
+        return aimbots.pods.getHeading() - (turretRotater.getTargetPosition()/config.ticksPerDegree);
+    }
+    public void turretSetIdealAngleUsingLLandPods(){
+        updateSensors();
+        if(result.isValid()){
+            setTurretPositionDegrees(getTurretPositionDegrees() - result.getTx(),1);
+        }
+        else{
+            setTurretPositionDegrees(aimbots.getIdealAngle(),1);
+        }
+    }
+    public void updateSensors(){
+        result = limelight.getLatestResult();
+        aimbots.update();
+
+    }
     /**
      * sets the hood to a specific launch angle
      * @param givenLaunchAngle is the desired launch angle
@@ -65,7 +104,12 @@ public class Turret {
         rightHoodServo.setPosition(givenPosition);
         leftHoodServo.setPosition(1-givenPosition);
     }
-    public void setFlywheelsToRPM(int rpm){
+
+    /**
+     *
+     * @param rpm is the desiredRpm
+     */
+    public void setFlywheelToRPM(int rpm){
         int ticksPerRotation = config.ticksPerRevFlywheel;
         int calculatedVelocity = (rpm/60)*ticksPerRotation;
         rightFlywheelMotor.setVelocity(calculatedVelocity);
@@ -84,6 +128,7 @@ public class Turret {
             return false;
         }
     }
+
 
 
 
