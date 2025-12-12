@@ -56,7 +56,6 @@ public class Turret {
         //aiming:
         aimbots = givenAimbots;
     }
-
     /**
      * sets the turret to be a specific angle
      * @param degrees the wanted angle from the perspective of the field
@@ -73,8 +72,11 @@ public class Turret {
         else{
             targetPose = -180;
         }
+        //this line sets the turret to aim based on field position rather than aiming off of the robot
         turretRotater.setTargetPosition((int)(aimbots.pods.getHeading()) - (int)(targetPose*config.ticksPerDegree));
+        //sets the motor to runnnn
         turretRotater.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //sets power to given power
         turretRotater.setPower(power);
     }
     public double getTurretPositionDegrees(){
@@ -92,7 +94,6 @@ public class Turret {
     public void updateSensors(){
         result = limelight.getLatestResult();
         aimbots.update();
-
     }
     /**
      * sets the hood to a specific launch angle
@@ -104,7 +105,6 @@ public class Turret {
         rightHoodServo.setPosition(givenPosition);
         leftHoodServo.setPosition(1-givenPosition);
     }
-
     /**
      *
      * @param rpm is the desiredRpm

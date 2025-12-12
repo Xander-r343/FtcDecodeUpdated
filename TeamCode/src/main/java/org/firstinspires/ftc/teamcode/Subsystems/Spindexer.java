@@ -68,8 +68,7 @@ public class Spindexer {
             starboardServo.setPosition(config.slot2ServoPosition);
             portServo.setPosition(1-config.slot2ServoPosition);
         }
-        else{
-        }
+
     }
     /**
      * returns the color value
@@ -140,8 +139,7 @@ public class Spindexer {
         spindexerState.setSlotState(0, readSlotColor(0));
         spindexerState.setSlotState(1, readSlotColor(1));
         spindexerState.setSlotState(2, readSlotColor(2));
-
-       //check if the sorter contains the wanted color
+        //check if the sorter contains the wanted color
             if(spindexerState.containsColorInSpindexer(givenFirstBall)) {
                 //check the sorter for color
                 order[0] = spindexerState.getSlotFromColor(givenFirstBall);
@@ -152,6 +150,10 @@ public class Spindexer {
                 //check the sorter for color
                 order[0] = spindexerState.getSlotFromColor(oppositeBall(givenFirstBall));
                 spindexerState.setSlotState(order[0], UNDECTED);
+            }
+            //add safe for if color is undetected
+            else{
+                order[1] = Integer.parseInt(null);
             }
             //second ball
             if(spindexerState.containsColorInSpindexer(givenSecondBall)) {
